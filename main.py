@@ -1,6 +1,6 @@
 import models
 import pygame
-import sys
+#import sys
 
 def main():
 	pygame.init()
