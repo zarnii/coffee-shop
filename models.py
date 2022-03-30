@@ -1,16 +1,5 @@
 import pygame
 
-class Build():
-	def __init__(self, screen):
-		self.screen = screen
-		self.image = pygame.image.load('images/build.png')
-		self.rect = self.image.get_rect(center = (1280//2,720//2))
-		self.screen_rect = screen.get_rect()
-
-	def draw(self):
-		'''рисование постройки'''
-		self.screen.blit(self.image, self.rect)
-
 
 #Размеры кнопки определяются автоматически
 class Button():
@@ -63,14 +52,73 @@ class ContextMenu():
 	def draw(self):
 		self.screen.blit(self.contexmenu, (self.x, self.y))
 
-class Coffee():
-	def __init__(self, screen):
+	'''def draw_text(self):
+		f1 = pygame.font.Font(None, 36)
+		text1 = f1.render('Hello Привет', True, (180, 0, 0))
+		self.screen.blit(text1,(0,0))'''
+
+class AlertMenu():
+	def __init__(self, screen, width, height, x, y, color, alpha, text):
 		self.screen = screen
-		self.image = pygame.image.load('images/coffee.png')
-		self.rect = self.image.get_rect(center = (1280//2,720//2))
-		self.screen_rect = screen.get_rect()
+		self.width = width
+		self.height = height
+		self.color = color
+		self.x = x 
+		self.y = y 
+		self.alpha = alpha
+		self.text = text
+
+		self.alertmenu = pygame.Surface((self.width, self.height))
+		self.alertmenu.fill(color)
+		self.alertmenu.set_alpha(alpha)
+		self.alertmenu.blit(text, (0,0))
 
 	def draw(self):
+		self.screen.blit(self.alertmenu, (self.x, self.y))
+
+
+
+class Coffee():
+	def __init__(self, screen, level, budget):
+		self.screen = screen
+		self.level = level
+		self.budget = budget
+		#self.image = pygame.image.load('images/coffee.png')
+		#self.rect = self.image.get_rect(center = (1280//2,720//2))
+		#self.screen_rect = screen.get_rect()
+
+	def draw_outside(self, screen):
 		'''рисование постройки'''
+		self.image = pygame.image.load('images/build.png')
+		self.rect = self.image.get_rect(center = (1280//2,720//2))
+		self.screen_rect = screen.get_rect()
 		self.screen.blit(self.image, self.rect)
+
+	def draw_insaide(self, screen):
+		'''рисование постройки'''
+		if self.level == 0:
+			self.image = pygame.image.load('images/coffee.png')
+			self.rect = self.image.get_rect(center = (1280//2,720//2))
+			self.screen_rect = screen.get_rect()
+			self.screen.blit(self.image, self.rect)
+		elif self.level == 1:
+			self.image = pygame.image.load('images/coffee_1.png')
+			self.rect = self.image.get_rect(center = (1280//2,720//2))
+			self.screen_rect = screen.get_rect()
+			self.screen.blit(self.image, self.rect)
+		elif self.level == 2:
+			self.image = pygame.image.load('images/coffee_2.png')
+			self.rect = self.image.get_rect(center = (1280//2,720//2))
+			self.screen_rect = screen.get_rect()
+			self.screen.blit(self.image, self.rect)
+		elif self.level == 3:
+			self.image = pygame.image.load('images/coffee_3.png')
+			self.rect = self.image.get_rect(center = (1280//2,720//2))
+			self.screen_rect = screen.get_rect()
+			self.screen.blit(self.image, self.rect)
+		elif self.level == 4:
+			self.image = pygame.image.load('images/coffee_4.png')
+			self.rect = self.image.get_rect(center = (1280//2,720//2))
+			self.screen_rect = screen.get_rect()
+			self.screen.blit(self.image, self.rect)
 		
