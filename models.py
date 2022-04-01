@@ -1,4 +1,6 @@
 import pygame
+import randome
+
 
 
 #Размеры кнопки определяются автоматически
@@ -15,9 +17,7 @@ class Button():
 
 		#draw button on screen
 		surface.blit(self.image, (self.rect.x, self.rect.y))
-
-		
-
+	
 	def press(self):
 		action = False
 		#get mouse position
@@ -33,9 +33,10 @@ class Button():
 			self.clicked = False
 
 		return action
-	
 
-class ContextMenu():
+
+
+class Menu:
 	def __init__(self, screen, width, height, x, y, color, alpha):
 		self.screen = screen
 		self.width = width
@@ -45,6 +46,12 @@ class ContextMenu():
 		self.y = y 
 		self.alpha = alpha
 
+
+
+class ContextMenu(Menu):
+	def __init__(self,screen, width, height, x, y, color, alpha):
+		Menu.__init__(self, screen, width, height, x, y, color, alpha)
+
 		self.contexmenu = pygame.Surface((self.width, self.height))
 		self.contexmenu.fill(color)
 		self.contexmenu.set_alpha(alpha)
@@ -52,20 +59,11 @@ class ContextMenu():
 	def draw(self):
 		self.screen.blit(self.contexmenu, (self.x, self.y))
 
-	'''def draw_text(self):
-		f1 = pygame.font.Font(None, 36)
-		text1 = f1.render('Hello Привет', True, (180, 0, 0))
-		self.screen.blit(text1,(0,0))'''
 
-class AlertMenu():
+
+class AlertMenu(Menu):
 	def __init__(self, screen, width, height, x, y, color, alpha, text):
-		self.screen = screen
-		self.width = width
-		self.height = height
-		self.color = color
-		self.x = x 
-		self.y = y 
-		self.alpha = alpha
+		Menu.__init__(self, screen, width, height, x, y, color, alpha)
 		self.text = text
 
 		self.alertmenu = pygame.Surface((self.width, self.height))
@@ -79,13 +77,21 @@ class AlertMenu():
 
 
 class Coffee():
-	def __init__(self, screen, level, budget):
+	def __init__(self, screen, level, budget, upgradeprice, menu):
 		self.screen = screen
 		self.level = level
 		self.budget = budget
+		self.upgradeprice = upgradeprice
+		self.menu = menu
 		#self.image = pygame.image.load('images/coffee.png')
 		#self.rect = self.image.get_rect(center = (1280//2,720//2))
 		#self.screen_rect = screen.get_rect()
+
+	def upgrade(self):
+		if self.budget > self.upgradeprice:
+			self.budget -= self.upgradeprice
+			self.upgradeprice += 7000
+			return True
 
 	def draw_outside(self, screen):
 		'''рисование постройки'''
@@ -121,4 +127,20 @@ class Coffee():
 			self.rect = self.image.get_rect(center = (1280//2,720//2))
 			self.screen_rect = screen.get_rect()
 			self.screen.blit(self.image, self.rect)
+
+
+class Person:
+	def __init__(self, name, age):
+		self.name = name
+		self.age = age
+
+
+
+class Visitor(Person):
+	def __init__(self, name, age, money):
+		Person.__init__(self, name, age)
+		self.money = money
+
+	def make_order(self, menu):
+		pass
 		

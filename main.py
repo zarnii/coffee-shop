@@ -11,7 +11,12 @@ def main():
 
 	#Build: screen
 	#build = models.Build(screen)
-	coffee = models.Coffee(screen, 0, 5000)
+	coffeemenu = {
+	'кофе' : 250,
+	'чай' : 150
+	'молочный коктель': 200
+	}
+	coffee = models.Coffee(screen, 0, 5000, 3000, coffeemenu)
 
 	#Button: x, y, image, scale
 	start_img = pygame.image.load('images/start_btn.png').convert_alpha()
@@ -24,16 +29,22 @@ def main():
 	table_button = models.Button(1145, 100, table_img, 0.44)
 
 	#ContextMenu: screen, width, height, x, y, color, alpha
-	firstcontextmenu = models.ContextMenu(screen, 1280, 500, 0, 520, (16,16,16), 250)
-	secondcontextmenu = models.ContextMenu(screen, 150, 720, 1130, 0, (16,16,16), 250)
+	bottomcontextmenu = models.ContextMenu(screen, 1280, 500, 0, 520, (16,16,16), 250)
+	leftcontextmenu = models.ContextMenu(screen, 150, 720, 1130, 0, (16,16,16), 250)
 
-	f1 = pygame.font.Font(None, 36)
-	text1 = f1.render('Hello Привет', True, (180, 0, 0))
-	alertmenu = models.AlertMenu(screen, 50, 50, 100, 100, (16,16,16), 250, text1)
+
+	def infomenu():
+		font1 = pygame.font.Font('font/F77 Minecraft.ttf', 20)
+		level = font1.render(f'Уровень {coffee.level}', True, (255,255,255))
+		budget = font1.render(f'Бюджет {coffee.budget}', True, (255,255,255))
+
+		screen.blit(level, (10, 20))
+		screen.blit(budget, (10, 50))
+
+
 
 
 	startwindow = True
-
 
 	while True:
 
@@ -44,37 +55,34 @@ def main():
 		if startwindow == True:
 			screen.blit(bg, [0,0])
 			coffee.draw_outside(screen)
-			firstcontextmenu.draw()
+			bottomcontextmenu.draw()
 			start_button.draw(screen)
-			alertmenu.draw()
-
+			
 
 		if start_button.press():
 			startwindow = False
 			coffee.draw_insaide(screen)
-			secondcontextmenu.draw()
+			leftcontextmenu.draw()
 			exit_button.draw(screen)
 			table_button.draw(screen)
+			infomenu()
 			
 
 		if exit_button.press():
 			startwindow = False
 			screen.blit(bg, [0,0])
 			coffee.draw_outside(screen)
-			firstcontextmenu.draw()
+			bottomcontextmenu.draw()
 			start_button.draw(screen)
 
 		if table_button.press():
-			if coffee.level < 4:
+			if coffee.level < 4 and coffee.upgrade() == True:
 				coffee.level += 1
 				coffee.draw_insaide(screen)
-				secondcontextmenu.draw()
+				leftcontextmenu.draw()
 				exit_button.draw(screen)
 				table_button.draw(screen)
-				
-				print('lvl + 1')
-			else:
-				print('max lvl')
+				infomenu()
 
 			
 		
