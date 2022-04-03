@@ -1,6 +1,9 @@
+import random
 import models
 import pygame
+import media
 import sys
+
 
 def main():
 	pygame.init()
@@ -13,36 +16,71 @@ def main():
 	#build = models.Build(screen)
 	coffeemenu = {
 	'кофе' : 250,
-	'чай' : 150
+	'чай' : 150,
 	'молочный коктель': 200
 	}
-	coffee = models.Coffee(screen, 0, 5000, 3000, coffeemenu)
+	#Coffee: level, budget, upgradeprice, menu, employeecount
+	coffee = models.Coffee(screen, 0, 5000, 3000, coffeemenu, 0)
 
 	#Button: x, y, image, scale
-	start_img = pygame.image.load('images/start_btn.png').convert_alpha()
-	start_button = models.Button(10, 530, start_img, 0.5)
+	enter_img = pygame.image.load('images/enter_btn.png').convert_alpha()
+	enter_button = models.Button(10, 530, enter_img, 0.5)
 
 	exit_img = pygame.image.load('images/exit_btn.png').convert_alpha()
 	exit_button = models.Button(1145, 10, exit_img, 0.5)
 
 	table_img = pygame.image.load('images/table_btn.png').convert_alpha()
-	table_button = models.Button(1145, 100, table_img, 0.44)
+	table_button = models.Button(1145, 110, table_img, 0.44)
+
+	letin_img = pygame.image.load('images/letin_btn.png').convert_alpha()
+	letin_button = models.Button(1145, 210, letin_img, 0.44)
+
+	hire_img = pygame.image.load('images/hire_btn.png').convert_alpha()
+	hire_button = models.Button(1145, 310, hire_img, 0.44)
 
 	#ContextMenu: screen, width, height, x, y, color, alpha
 	bottomcontextmenu = models.ContextMenu(screen, 1280, 500, 0, 520, (16,16,16), 250)
 	leftcontextmenu = models.ContextMenu(screen, 150, 720, 1130, 0, (16,16,16), 250)
+
+	font1 = pygame.font.Font('font/F77 Minecraft.ttf', 20)
+	text = font1.render(f'Уровень {coffee.level}', True, (255,255,255))
+	alertmenu = models.AlertMenu(screen, 1280, 500, 0, 520, (16,16,16), 250, text)
 
 
 	def infomenu():
 		font1 = pygame.font.Font('font/F77 Minecraft.ttf', 20)
 		level = font1.render(f'Уровень {coffee.level}', True, (255,255,255))
 		budget = font1.render(f'Бюджет {coffee.budget}', True, (255,255,255))
+		upgradeprice = font1.render(f'Цена улучшения {coffee.upgradeprice}', True, (255,255,255))
 
 		screen.blit(level, (10, 20))
 		screen.blit(budget, (10, 50))
+		screen.blit(upgradeprice, (10, 80))
 
+	def in_main_menu():
+		screen.blit(bg, [0,0])
+		coffee.draw_outside(screen)
+		bottomcontextmenu.draw()
+		enter_button.draw(screen)
+		return True
 
+	def in_coffee():
+		coffee.draw_insaide(screen)
+		leftcontextmenu.draw()
+		exit_button.draw(screen)
+		table_button.draw(screen)
+		letin_button.draw(screen)
+		hire_button.draw(screen)
+		infomenu()
+		#alertmenu.draw()
+		return False
 
+	def order():
+		#Visitor: name, age, money
+		v = models.Visitor(random.choice(media.mennamelist), random.randint(16,65), random.randint(100, 400))
+		coffee.budget = v.make_order(coffeemenu, coffee.budget)
+
+		in_coffee()
 
 	startwindow = True
 
@@ -53,43 +91,30 @@ def main():
 				sys.exit()
 
 		if startwindow == True:
-			screen.blit(bg, [0,0])
-			coffee.draw_outside(screen)
-			bottomcontextmenu.draw()
-			start_button.draw(screen)
+			in_main_menu()
 			
 
-		if start_button.press():
-			startwindow = False
-			coffee.draw_insaide(screen)
-			leftcontextmenu.draw()
-			exit_button.draw(screen)
-			table_button.draw(screen)
-			infomenu()
+		if enter_button.press():
+			startwindow = in_coffee()
 			
 
 		if exit_button.press():
-			startwindow = False
-			screen.blit(bg, [0,0])
-			coffee.draw_outside(screen)
-			bottomcontextmenu.draw()
-			start_button.draw(screen)
+			startwindow = in_main_menu()
 
 		if table_button.press():
 			if coffee.level < 4 and coffee.upgrade() == True:
 				coffee.level += 1
-				coffee.draw_insaide(screen)
-				leftcontextmenu.draw()
-				exit_button.draw(screen)
-				table_button.draw(screen)
-				infomenu()
+				in_coffee()
 
-			
+		if letin_button.press():
+			order()
+
+
 		
 		
-		pygame.display.flip()
 
-		#pygame.display.update()
+		#pygame.display.flip()
+		pygame.display.update()
 
 		
 

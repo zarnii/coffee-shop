@@ -1,5 +1,12 @@
 import pygame
-import randome
+import random
+import time
+
+
+class Person:
+	def __init__(self, name, age):
+		self.name = name
+		self.age = age
 
 
 
@@ -71,13 +78,14 @@ class AlertMenu(Menu):
 		self.alertmenu.set_alpha(alpha)
 		self.alertmenu.blit(text, (0,0))
 
+
 	def draw(self):
 		self.screen.blit(self.alertmenu, (self.x, self.y))
 
 
 
 class Coffee():
-	def __init__(self, screen, level, budget, upgradeprice, menu):
+	def __init__(self, screen, level, budget, upgradeprice, menu, employeecount):
 		self.screen = screen
 		self.level = level
 		self.budget = budget
@@ -92,6 +100,8 @@ class Coffee():
 			self.budget -= self.upgradeprice
 			self.upgradeprice += 7000
 			return True
+
+		
 
 	def draw_outside(self, screen):
 		'''рисование постройки'''
@@ -129,18 +139,32 @@ class Coffee():
 			self.screen.blit(self.image, self.rect)
 
 
-class Person:
-	def __init__(self, name, age):
-		self.name = name
-		self.age = age
-
-
 
 class Visitor(Person):
 	def __init__(self, name, age, money):
 		Person.__init__(self, name, age)
 		self.money = money
 
-	def make_order(self, menu):
-		pass
+	def make_order(self, menu, budget):
+		order = random.choice(list(menu.keys()))
+		price = menu.get(order)
+		if self.money >= price:
+			budget += price
+			print(f'{budget}')
+			print(f'{self.name} заказал {order} по цене {price}')
+			print(f'{budget}\n')
+			return budget
+		else:
+			print(f'Не хватило денег для {order}')
+			return budget
+
+		
+
+class Employee(Person):
+	count = 0
+	def __init__(self, name, age, salary, count):
+		Person.__init__(self, name, age)
+		self.salary = salary
+		count += 1
+
 		
