@@ -3,6 +3,8 @@ import random
 import time
 
 
+
+
 class Person:
 	def __init__(self, name, age):
 		self.name = name
@@ -76,7 +78,7 @@ class AlertMenu(Menu):
 		self.alertmenu = pygame.Surface((self.width, self.height))
 		self.alertmenu.fill(color)
 		self.alertmenu.set_alpha(alpha)
-		self.alertmenu.blit(text, (0,0))
+		self.alertmenu.blit(text, (10, self.height/2 ))
 
 
 	def draw(self):
@@ -100,6 +102,8 @@ class Coffee():
 			self.budget -= self.upgradeprice
 			self.upgradeprice += 7000
 			return True
+		else:
+			return False
 
 		
 
@@ -150,21 +154,41 @@ class Visitor(Person):
 		price = menu.get(order)
 		if self.money >= price:
 			budget += price
-			print(f'{budget}')
-			print(f'{self.name} заказал {order} по цене {price}')
-			print(f'{budget}\n')
-			return budget
+			#print(f'{budget}')
+			
+
+			text = f'{self.name} заказал {order} по цене {price}'
+			#print(f'{budget}\n')
+
+			return budget, text
 		else:
-			print(f'Не хватило денег для {order}')
-			return budget
+			if self.name[-1] == 'й':
+				vname = f'{self.name[:len(self.name)-1]}я'
+				text = f'У {vname} не хватило денег для {order}'
+			else:
+				vname = self.name
+				text = f'У {vname}a не хватило денег для {order}'
+
+			return budget, text
 
 		
 
 class Employee(Person):
-	count = 0
-	def __init__(self, name, age, salary, count):
+	def __init__(self, screen, name, age, salary, count):
 		Person.__init__(self, name, age)
+		self.screen = screen
 		self.salary = salary
-		count += 1
+		self.count = count
+
+	def draw(self, screen):
+
+		if self.count != 0:
+			self.image = pygame.image.load('images/worker1.png')
+			self.rect = self.image.get_rect(center = (1280//2,360))
+			self.screen_rect = screen.get_rect()
+			self.screen.blit(self.image, self.rect)
+
+
+
 
 		
