@@ -3,3 +3,4 @@
 
 Скачать/Download:
 https://drive.google.com/drive/folders/1uqtXmM2xZhNLDg_Ahz1UQ3mWE3fUutDG?usp=sharing
+https://mega.nz/folder/Zm4xjQpS#_RWkzB5JC2B5bJ2FXRFxbQ
