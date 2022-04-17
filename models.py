@@ -4,7 +4,6 @@ import time
 
 
 
-
 class Person:
 	def __init__(self, name, age):
 		self.name = name
@@ -23,7 +22,6 @@ class Button():
 		self.clicked = False
 
 	def draw(self, surface):
-
 		#draw button on screen
 		surface.blit(self.image, (self.rect.x, self.rect.y))
 	
@@ -174,21 +172,21 @@ class Visitor(Person):
 		
 
 class Employee(Person):
-	def __init__(self, screen, name, age, salary, count):
+	fatigue = 0
+	def __init__(self, screen, name, age, salary):
 		Person.__init__(self, name, age)
 		self.screen = screen
 		self.salary = salary
-		self.count = count
 
-	def draw(self, screen):
+	def fatiguee(self, fatigue, worker):
+		fatigue += 1
+		if fatigue // 2 == 0:
+			print(f'Работники устали {fatigue}')
+		return fatigue
 
-		if self.count != 0:
-			self.image = pygame.image.load('images/worker1.png')
-			self.rect = self.image.get_rect(center = (1280//2,360))
-			self.screen_rect = screen.get_rect()
-			self.screen.blit(self.image, self.rect)
-
-
-
-
-		
+	def draw(self, screen, x, y):
+		#1280//2,360
+		self.image = pygame.image.load('images/worker1.png')
+		self.rect = self.image.get_rect(center = (x, y))
+		self.screen_rect = screen.get_rect()
+		self.screen.blit(self.image, self.rect)

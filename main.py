@@ -6,11 +6,14 @@ import sys
 
 
 def main():
+	__version__ = '1.1'
 	pygame.init()
 	#pygame.FULLSCREEN
 	screen = pygame.display.set_mode((1280,720))
 	pygame.display.set_caption('test game')
 	bg = pygame.image.load('images/bg.png').convert()
+
+	workers = []
 
 
 	#Build: screen
@@ -24,7 +27,7 @@ def main():
 	coffee = models.Coffee(screen, 0, 5000, 3000, coffeemenu, 0)
 	#Employee: screen, name, age, salary, count
 
-	w = models.Employee(screen,random.choice(media.mennamelist), random.randint(16,65), random.randint(100, 400), 0)
+	#w = models.Employee(screen,random.choice(media.mennamelist), random.randint(16,65), random.randint(100, 400), 0)
 
 	#Button: x, y, image, scale
 	enter_img = pygame.image.load('images/enter_btn.png').convert_alpha()
@@ -69,13 +72,19 @@ def main():
 		screen.blit(menu, (10, 130))
 		screen.blit(menu_coffe, (10, 160))
 		screen.blit(menu_tea, (10, 190))
-		screen.blit(menu_milk, (10, 220))		
+		screen.blit(menu_milk, (10, 220))
+
+	def version():
+		font1 = pygame.font.Font('font/F77 Minecraft.ttf', 14)
+		v = font1.render(f'version {__version__}', True, (104,104,104))
+		screen.blit(v, (1170, 700))	
 
 	def in_main_menu():
 		screen.blit(bg, [0,0])
 		coffee.draw_outside(screen)
 		bottomcontextmenu.draw()
 		enter_button.draw(screen)
+		version()
 		return True
 
 	def in_coffee():
@@ -85,16 +94,21 @@ def main():
 		table_button.draw(screen)
 		letin_button.draw(screen)
 		hire_button.draw(screen)
-		w.draw(screen)
 
+		if workers != []:
+			x = 500
+			for i in workers:
+				i.draw(screen, x, 360)
+				x += 150
+	
 		infomenu()
 		#alertmenu.draw()
 		return False
 
 	def order():
 		#Visitor: name, age, money
-		if coffee.level != 0 and w.count != 0:
-			v = models.Visitor(random.choice(media.mennamelist), random.randint(16,65), random.randint(100, 400))
+		if coffee.level != 0 and workers != []:
+			v = models.Visitor(random.choice(media.mennamelist), random.randint(16,65), random.randint(1, 400))
 			makeorder = v.make_order(coffeemenu, coffee.budget)
 			coffee.budget = makeorder[0]
 
@@ -108,24 +122,34 @@ def main():
 			text = font1.render('Вы не можете впустить посетителей, потому что у вас нет столов!', True, (255,255,255))
 			alertmenu = models.AlertMenu(screen, 890, 100, 170, 720//2, (16,16,16), 250, text)
 			alertmenu.draw()
-		elif w.count == 0:
+		elif workers == []:
 			font1 = pygame.font.Font('font/F77 Minecraft.ttf', 20)
 			text = font1.render('Вы не можете впустить посетителей, потому что у вас нет работников!', True, (255,255,255))
 			alertmenu = models.AlertMenu(screen, 935, 100, 170, 720//2, (16,16,16), 250, text)
 			alertmenu.draw()
 
+
 	def hire_employee():
 		#Employee: screen, name, age, salary, count
+		w = models.Employee(screen, random.choice(media.mennamelist), random.randint(16,65), 1000)
 
 		font1 = pygame.font.Font('font/F77 Minecraft.ttf', 20)
-		if w.count == 1:
-			text = font1.render(f'У вас уже есть работник!', True, (255,255,255))
+		if len(workers) < 3:
+			if coffee.budget >= w.salary:
+				text = font1.render(f'Вы наняли работника {w.name} за {w.salary}', True, (255,255,255))
+				coffee.budget -= w.salary
+				workers.append(w)
+			else:
+				font1 = pygame.font.Font('font/F77 Minecraft.ttf', 19)
+				text = font1.render(f'Нанять работника можно за {w.salary}, вам не хватает {w.salary - coffee.budget}', True, (255,255,255))
 		else:
-			text = font1.render(f'Вы наняли работника {w.name}', True, (255,255,255))
-		w.count += 1
+			text = font1.render(f'У вас уже есть работник!', True, (255,255,255))
+
+
 
 		in_coffee()
 		screen.blit(text, (320, 180))
+
 
 
 	startwindow = True
@@ -165,6 +189,7 @@ def main():
 
 		if letin_button.press():
 			order()
+			#print(workers)
 
 		if hire_button.press():
 			hire_employee()
